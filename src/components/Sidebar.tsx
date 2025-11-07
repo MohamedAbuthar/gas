@@ -2,7 +2,11 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 
-export default function Sidebar() {
+interface SidebarProps {
+  onClose?: () => void;
+}
+
+export default function Sidebar({ onClose }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -44,49 +48,62 @@ export default function Sidebar() {
         </svg>
       )
     },
-    // {
-    //   name: 'Add Roles & Members',
-    //   href: '/add-roles-members',
-    //   icon: (
-    //     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    //       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-    //     </svg>
-    //   )
-    // }
   ];
 
+  const handleNavigation = (href: string) => {
+    router.push(href);
+    // Close sidebar on mobile after navigation
+    if (onClose) {
+      onClose();
+    }
+  };
+
   const handleLogout = () => {
-    // Here you would typically clear authentication tokens
     router.push('/');
+    if (onClose) {
+      onClose();
+    }
   };
 
   return (
     <div className="w-64 bg-white shadow-xl border-r border-gray-200 flex flex-col h-screen">
       {/* Logo/Brand */}
-      <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-orange-50">
-        <div className="flex items-center">
-          <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+      <div className="p-4 lg:p-6 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-orange-50">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h1 className="text-lg lg:text-xl font-bold text-gray-900">Gas Company</h1>
+              <p className="text-xs text-gray-600">Management System</p>
+            </div>
+          </div>
+          {/* Close button for mobile */}
+          <button
+            onClick={onClose}
+            className="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+            aria-label="Close sidebar"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
-          </div>
-          <div className="ml-3">
-            <h1 className="text-xl font-bold text-gray-900">Gas Company</h1>
-            <p className="text-xs text-gray-600">Management System</p>
-          </div>
+          </button>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6">
+      <nav className="flex-1 px-3 lg:px-4 py-4 lg:py-6 overflow-y-auto">
         <ul className="space-y-2">
           {navigationItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <li key={item.name}>
                 <button
-                  onClick={() => router.push(item.href)}
-                  className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
+                  onClick={() => handleNavigation(item.href)}
+                  className={`w-full flex items-center px-3 lg:px-4 py-2.5 lg:py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
                     isActive
                       ? 'bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 border border-amber-200 shadow-sm'
                       : 'text-gray-700 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 hover:text-amber-700'
@@ -95,7 +112,7 @@ export default function Sidebar() {
                   <span className={`mr-3 ${isActive ? 'text-amber-600' : 'text-gray-400'}`}>
                     {item.icon}
                   </span>
-                  {item.name}
+                  <span className="truncate">{item.name}</span>
                 </button>
               </li>
             );
@@ -104,17 +121,17 @@ export default function Sidebar() {
       </nav>
 
       {/* Logout */}
-      <div className="p-4 border-t border-gray-200 bg-gray-50">
+      <div className="p-3 lg:p-4 border-t border-gray-200 bg-gray-50">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 rounded-xl transition-all duration-200"
+          className="w-full flex items-center px-3 lg:px-4 py-2.5 lg:py-3 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 rounded-xl transition-all duration-200"
         >
           <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
-          Logout
+          <span className="truncate">Logout</span>
         </button>
       </div>
     </div>
   );
-} 
+}

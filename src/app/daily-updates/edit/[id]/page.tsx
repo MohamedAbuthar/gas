@@ -311,14 +311,14 @@ export default function EditDailyUpdatePage() {
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-gradient-to-r from-amber-100 to-orange-100 rounded-xl flex items-center justify-center mr-4">
-                <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">Edit Daily Update</h1>
-                <p className="text-gray-600">Update daily operations information</p>
+            <div className="w-12 h-12 bg-gradient-to-r from-amber-100 to-orange-100 rounded-xl flex items-center justify-center mr-4">
+              <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Edit Daily Update</h1>
+              <p className="text-gray-600">Update daily operations information</p>
               </div>
             </div>
             <div className="flex gap-3">
@@ -719,8 +719,8 @@ export default function EditDailyUpdatePage() {
                     onChange={(e) => handleCashDenominationChange('oldBalance', parseFloat(e.target.value) || 0)}
                     placeholder="Enter amount"
                   />
-                </div>
-                <div>
+              </div>
+              <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Coins</label>
                   <input
                     type="number"
@@ -799,9 +799,9 @@ export default function EditDailyUpdatePage() {
                     <span className="text-lg font-bold text-gray-900">Grand Total:</span>
                     <span className="text-2xl font-bold text-amber-600">₹{currentData.grandTotal.toFixed(2)}</span>
                   </div>
-                </div>
               </div>
             </div>
+          </div>
           )}
 
           {/* Form Actions */}

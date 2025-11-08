@@ -64,7 +64,7 @@ export default function Dashboard() {
               </svg>
             </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-4 px-2">Gas Company Management System</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-4 px-2">Sundhara Gas Management System</h1>
           <p className="text-sm sm:text-base lg:text-lg text-gray-600 px-2">Efficiently manage your gas operations, team members, and daily updates</p>
         </div>
 

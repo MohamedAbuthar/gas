@@ -3,11 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from '../../components/DashboardLayout';
+import ProtectedRoute from '../../components/ProtectedRoute';
+import { useAuth } from '@/contexts/AuthContext';
 import DataTable from '../../components/DataTable';
 import { listAttendanceByDate, deleteAttendance, type AttendanceRecord } from '@/lib/db';
 
 export default function AttendancePage() {
   const router = useRouter();
+  const { isAdmin } = useAuth();
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [deliveryMen, setDeliveryMen] = useState<AttendanceRecord[]>([]);
 
@@ -66,7 +69,8 @@ export default function AttendancePage() {
   const stats = getAttendanceStats();
 
   return (
-    <DashboardLayout>
+    <ProtectedRoute>
+      <DashboardLayout>
       <div className="p-3 sm:p-4 lg:p-6">
         {/* Header */}
         <div className="mb-4 sm:mb-6">
@@ -233,13 +237,14 @@ export default function AttendancePage() {
           columns={columns}
           data={deliveryMen}
           title="Daily Attendance Report"
-          onAddNew={handleAddNew}
+          onAddNew={isAdmin() ? handleAddNew : undefined}
           addButtonText="Add Attendance"
-          onEdit={onEdit}
-          onDelete={onDelete}
+          onEdit={isAdmin() ? onEdit : undefined}
+          onDelete={isAdmin() ? onDelete : undefined}
           idKey="id"
         />
       </div>
     </DashboardLayout>
+    </ProtectedRoute>
   );
 } 

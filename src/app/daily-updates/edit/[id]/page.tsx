@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import DashboardLayout from '../../../../components/DashboardLayout';
+import ProtectedRoute from '../../../../components/ProtectedRoute';
 import { getDailyUpdate, updateDailyUpdate, type DailyUpdate, listMembers, type MemberRecord } from '@/lib/db';
 import { exportToExcel, importFromExcel } from '@/lib/excel';
 
@@ -306,6 +307,7 @@ export default function EditDailyUpdatePage() {
   const inputCls = 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white text-gray-900 placeholder-gray-500';
 
   return (
+    <ProtectedRoute requireAdmin>
     <DashboardLayout>
       <div className="p-6">
         <div className="mb-6">
@@ -824,5 +826,6 @@ export default function EditDailyUpdatePage() {
         </form>
       </div>
     </DashboardLayout>
+    </ProtectedRoute>
   );
 }

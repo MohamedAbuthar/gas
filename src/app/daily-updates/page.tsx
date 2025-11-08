@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import DashboardLayout from '../../components/DashboardLayout';
+import ProtectedRoute from '../../components/ProtectedRoute';
+import { useAuth } from '@/contexts/AuthContext';
 import { listDailyUpdates, deleteDailyUpdate, type DailyUpdate } from '@/lib/db';
 import { exportToExcel } from '@/lib/excel';
 
@@ -35,6 +37,7 @@ interface ParsedDeliveryManData {
 
 export default function DailyUpdatesPage() {
   const router = useRouter();
+  const { isAdmin } = useAuth();
   const [updates, setUpdates] = useState<DailyUpdate[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUpdate, setSelectedUpdate] = useState<DailyUpdate | null>(null);
@@ -152,6 +155,7 @@ export default function DailyUpdatesPage() {
   };
 
   return (
+    <ProtectedRoute>
     <DashboardLayout>
       <div className="p-3 sm:p-4 lg:p-6">
         <div className="mb-4 sm:mb-6">
@@ -181,16 +185,18 @@ export default function DailyUpdatesPage() {
                     <span className="sm:inline">({selectedUpdates.size})</span>
                   </button>
                 )}
-                <button
-                  onClick={handleAddNew}
-                  className="px-3 sm:px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:from-amber-600 hover:to-orange-600 transition-all duration-200 font-medium shadow-md hover:shadow-lg flex items-center gap-2 text-sm sm:text-base"
-                >
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  <span className="hidden sm:inline">Add Update</span>
-                  <span className="sm:hidden">Add</span>
-                </button>
+                {isAdmin() && (
+                  <button
+                    onClick={handleAddNew}
+                    className="px-3 sm:px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:from-amber-600 hover:to-orange-600 transition-all duration-200 font-medium shadow-md hover:shadow-lg flex items-center gap-2 text-sm sm:text-base"
+                  >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <span className="hidden sm:inline">Add Update</span>
+                    <span className="sm:hidden">Add</span>
+                  </button>
+                )}
               </div>
             </div>
         </div>
@@ -277,24 +283,28 @@ export default function DailyUpdatesPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                               </svg>
                             </button>
-                            <button
-                              onClick={() => onEdit(update)}
-                              className="p-2 text-amber-600 hover:text-amber-900 hover:bg-amber-50 rounded-lg transition-colors"
-                              title="Edit"
-                            >
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                              </svg>
-                            </button>
-                            <button
-                              onClick={() => onDelete(update)}
-                              className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-colors"
-                              title="Delete"
-                            >
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                              </svg>
-                            </button>
+                            {isAdmin() && (
+                              <>
+                                <button
+                                  onClick={() => onEdit(update)}
+                                  className="p-2 text-amber-600 hover:text-amber-900 hover:bg-amber-50 rounded-lg transition-colors"
+                                  title="Edit"
+                                >
+                                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                  </svg>
+                                </button>
+                                <button
+                                  onClick={() => onDelete(update)}
+                                  className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-colors"
+                                  title="Delete"
+                                >
+                                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                  </svg>
+                                </button>
+                              </>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -364,24 +374,28 @@ export default function DailyUpdatesPage() {
                         </svg>
                         <span className="text-xs">Download</span>
                       </button>
-                      <button
-                        onClick={() => onEdit(update)}
-                        className="flex-1 p-2 text-amber-600 hover:text-amber-900 hover:bg-amber-50 rounded-lg transition-colors flex items-center justify-center gap-1"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        <span className="text-xs">Edit</span>
-                      </button>
-                      <button
-                        onClick={() => onDelete(update)}
-                        className="flex-1 p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center gap-1"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        <span className="text-xs">Delete</span>
-                      </button>
+                      {isAdmin() && (
+                        <>
+                          <button
+                            onClick={() => onEdit(update)}
+                            className="flex-1 p-2 text-amber-600 hover:text-amber-900 hover:bg-amber-50 rounded-lg transition-colors flex items-center justify-center gap-1"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            <span className="text-xs">Edit</span>
+                          </button>
+                          <button
+                            onClick={() => onDelete(update)}
+                            className="flex-1 p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center gap-1"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            <span className="text-xs">Delete</span>
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 );
@@ -587,5 +601,6 @@ export default function DailyUpdatesPage() {
         )}
       </div>
     </DashboardLayout>
+    </ProtectedRoute>
   );
 } 

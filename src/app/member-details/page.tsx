@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import DashboardLayout from '../../components/DashboardLayout';
+import ProtectedRoute from '../../components/ProtectedRoute';
+import { useAuth } from '@/contexts/AuthContext';
 import DataTable from '../../components/DataTable';
 import { listMembers, deleteMember, type MemberRecord } from '@/lib/db';
 
 export default function MemberDetailsPage() {
   const router = useRouter();
+  const { isAdmin } = useAuth();
   const [members, setMembers] = useState<MemberRecord[]>([]);
   const [deleteConfirm, setDeleteConfirm] = useState<MemberRecord | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -61,7 +64,8 @@ export default function MemberDetailsPage() {
   };
 
   return (
-    <DashboardLayout>
+    <ProtectedRoute>
+      <DashboardLayout>
       <div className="p-6">
         <div className="mb-6">
           <div className="flex items-center mb-4">
@@ -81,10 +85,10 @@ export default function MemberDetailsPage() {
           columns={columns}
           data={members}
           title="Gas Operations Team"
-          onAddNew={handleAddNew}
+          onAddNew={isAdmin() ? handleAddNew : undefined}
           addButtonText="Add Member"
-          onEdit={onEdit}
-          onDelete={onDelete}
+          onEdit={isAdmin() ? onEdit : undefined}
+          onDelete={isAdmin() ? onDelete : undefined}
           idKey="id"
         />
       </div>
@@ -139,5 +143,6 @@ export default function MemberDetailsPage() {
         </div>
       )}
     </DashboardLayout>
+    </ProtectedRoute>
   );
 } 

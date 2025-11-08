@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import DashboardLayout from '../../../../components/DashboardLayout';
+import ProtectedRoute from '../../../../components/ProtectedRoute';
 import { getAttendance, updateAttendance, type AttendanceRecord } from '@/lib/db';
 
 export default function EditAttendancePage() {
@@ -44,14 +45,17 @@ export default function EditAttendancePage() {
 
   if (!data) {
     return (
-      <DashboardLayout>
-        <div className="p-6">Loading...</div>
-      </DashboardLayout>
+      <ProtectedRoute requireAdmin>
+        <DashboardLayout>
+          <div className="p-6">Loading...</div>
+        </DashboardLayout>
+      </ProtectedRoute>
     );
   }
 
   return (
-    <DashboardLayout>
+    <ProtectedRoute requireAdmin>
+      <DashboardLayout>
       <div className="p-6">
         <form onSubmit={onSubmit} className="space-y-6 max-w-3xl">
           <h1 className="text-2xl font-bold">Edit Attendance</h1>
@@ -100,5 +104,6 @@ export default function EditAttendancePage() {
         </form>
       </div>
     </DashboardLayout>
+    </ProtectedRoute>
   );
 }

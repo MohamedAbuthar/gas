@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import DashboardLayout from '../../../../components/DashboardLayout';
+import ProtectedRoute from '../../../../components/ProtectedRoute';
 import { getMember, updateMember, type MemberRecord } from '@/lib/db';
 
 export default function EditMemberPage() {
@@ -49,16 +50,19 @@ export default function EditMemberPage() {
 
   if (!form) {
     return (
-      <DashboardLayout>
-        <div className="p-6">Loading...</div>
-      </DashboardLayout>
+      <ProtectedRoute requireAdmin>
+        <DashboardLayout>
+          <div className="p-6">Loading...</div>
+        </DashboardLayout>
+      </ProtectedRoute>
     );
   }
 
   const inputCls = 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white text-gray-900 placeholder-gray-500';
 
   return (
-    <DashboardLayout>
+    <ProtectedRoute requireAdmin>
+      <DashboardLayout>
       <div className="p-6">
         <div className="mb-6">
           <div className="flex items-center mb-4">
@@ -117,5 +121,6 @@ export default function EditMemberPage() {
         </form>
       </div>
     </DashboardLayout>
+    </ProtectedRoute>
   );
 }

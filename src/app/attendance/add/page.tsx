@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import DashboardLayout from '../../../components/DashboardLayout';
+import ProtectedRoute from '../../../components/ProtectedRoute';
 import { createAttendance, type AttendanceRecord } from '@/lib/db';
 
 interface AttendanceForm {
@@ -117,7 +118,8 @@ export default function AddAttendancePage() {
   const inputCls = 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white text-gray-900 placeholder-gray-500';
 
   return (
-    <DashboardLayout>
+    <ProtectedRoute requireAdmin>
+      <DashboardLayout>
       <div className="p-6">
         <div className="mb-6">
           <div className="flex items-center mb-4">
@@ -276,5 +278,6 @@ export default function AddAttendancePage() {
         </form>
       </div>
     </DashboardLayout>
+    </ProtectedRoute>
   );
 } 
